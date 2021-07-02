@@ -10,7 +10,14 @@ const controls = [
   { label: 'Cheese', type: 'cheese' },
 ];
 
-function BuildControls({ onAddIngredient, onRemoveIngredient, disabledInfo, price }) {
+function BuildControls({
+  onAddIngredient,
+  onRemoveIngredient,
+  disabledInfo,
+  price,
+  isPurchasable,
+  purchaseHandler,
+}) {
   return (
     <div className={classes.BuildControls}>
       <p>
@@ -25,6 +32,9 @@ function BuildControls({ onAddIngredient, onRemoveIngredient, disabledInfo, pric
           label={ctrl.label}
         />
       ))}
+      <button onClick={purchaseHandler} disabled={!isPurchasable} className={classes.OrderButton}>
+        ORDER NOW
+      </button>
     </div>
   );
 }
