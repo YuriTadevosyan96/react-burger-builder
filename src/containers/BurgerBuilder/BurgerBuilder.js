@@ -17,21 +17,38 @@ const INGREDIENT_PRICES = {
 };
 
 class BurgerBuilder extends Component {
-  state = {
-    ingredients: null,
-    totalPrice: 1,
-    purchasing: false,
-    loading: false,
-    error: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      ingredients: null,
+      totalPrice: 1,
+      purchasing: false,
+      loading: false,
+      error: false,
+    };
+
+    this._isMounted = false;
+  }
 
   componentDidMount() {
+    this._isMounted = true;
     apiBase
       .get('/ingredients.json')
-      .then((res) => this.setState({ ingredients: res.data }))
+      .then((res) => {
+        if (this._isMounted) {
+          this.setState({ ingredients: res.data });
+        }
+      })
       .catch((err) => {
-        this.setState({ error: true });
+        if (this._isMounted) {
+          this.setState({ error: true });
+        }
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   isPurchasable = (ingredients) => {
@@ -47,28 +64,12 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    this.setState({ loading: true });
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: 'John Doe',
-        address: {
-          street: 'test street',
-          zipCode: '44563',
-          country: 'Russia',
-        },
-        email: 'test@gmail.com',
-      },
-      deliveryMethod: 'fastest',
-    };
-    apiBase
-      .post('/orders.json', order)
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err))
-      .finally(() => {
-        this.setState({ loading: false, purchasing: false });
-      });
+    const queryParams = { ...this.state.ingredients, totalPrice: this.state.totalPrice };
+    const params = new URLSearchParams(queryParams).toString();
+    this.props.history.push({
+      pathname: '/checkout',
+      search: params,
+    });
   };
 
   addIngredientHandler = (ingredient) => {
