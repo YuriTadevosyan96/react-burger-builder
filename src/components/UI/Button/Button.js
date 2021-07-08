@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 
 import classes from './Button.module.css';
 
-function Button({ buttonType, clicked, children }) {
+function Button({ buttonType, clicked, children, disabled }) {
   const appliedClasses = [classes.Button];
 
   if (buttonType === 'success') {
     appliedClasses.push(classes.Success);
   } else if (buttonType === 'danger') {
     appliedClasses.push(classes.Danger);
+  }
+
+  if (disabled) {
+    appliedClasses.push(classes.Disabled);
   }
 
   return (
