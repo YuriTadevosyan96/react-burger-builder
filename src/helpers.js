@@ -5,6 +5,6 @@ export const capitalizeString = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const roundTwoDecimalPlaces = (num) => {
-  return +(Math.round(num + 'e+2') + 'e-2');
+export const roundNthDecimalPlaces = (num, nthPlaces) => {
+  return +(Math.round(num + `e+${nthPlaces}`) + `e-${nthPlaces}`);
 };
