@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Button from '../../UI/Button/Button';
 
@@ -15,6 +16,10 @@ function OrderSummery(props) {
     );
   });
 
+  const onContinue = () => {
+    props.history.push('/checkout');
+  };
+
   return (
     <>
       <h3>Your Order</h3>
@@ -27,11 +32,11 @@ function OrderSummery(props) {
       <Button clicked={props.purchaseCanceled} buttonType="danger">
         CANCEL
       </Button>
-      <Button clicked={props.purchaseContinued} buttonType="success">
+      <Button clicked={onContinue} buttonType="success">
         CONTINUE
       </Button>
     </>
   );
 }
 
-export default OrderSummery;
+export default withRouter(OrderSummery);

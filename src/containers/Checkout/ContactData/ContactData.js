@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import apiBase from '../../../api/apiBase';
 import Button from '../../../components/UI/Button/Button';
@@ -6,6 +8,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactData.module.css';
 import Input from '../../../components/UI/Input/Input';
 import { capitalizeString } from '../../../helpers';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import { purchaseBurger } from '../../../store/actions/order';
 
 // helper
 const inputConfig = (elType, elConfigType, elPlaceholder, required = true, value = '') => ({
@@ -22,7 +26,7 @@ const inputConfig = (elType, elConfigType, elPlaceholder, required = true, value
   value: value,
 });
 
-export default class ContactData extends Component {
+class ContactData extends Component {
   state = {
     orderForm: {
       name: inputConfig('input', 'text', 'Your Name'),
@@ -45,7 +49,6 @@ export default class ContactData extends Component {
       },
     },
     isFormValid: false,
-    loading: false,
   };
 
   submitHandler = (e) => {
@@ -67,19 +70,13 @@ export default class ContactData extends Component {
       return;
     }
 
-    this.setState({ loading: true });
-
     const order = {
       orderData: formData,
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
     };
-    apiBase
-      .post('/orders.json', order)
-      .then((res) => {
-        this.props.history.push('/');
-      })
-      .catch((err) => this.setState({ loading: false }));
+
+    this.props.purchaseBurger(order);
   };
 
   inputChangeHandler = (e) => {
@@ -147,7 +144,7 @@ export default class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner />;
     }
     return (
@@ -158,3 +155,15 @@ export default class ContactData extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  ingredients: state.ingredients.ingredients,
+  totalPrice: state.ingredients.totalPrice,
+  loading: state.orders.loading,
+});
+
+const mapDispatchToProps = { purchaseBurger };
+
+const withHandler = withErrorHandler(ContactData, apiBase);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withHandler));

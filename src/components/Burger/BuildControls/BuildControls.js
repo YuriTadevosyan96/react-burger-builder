@@ -12,12 +12,18 @@ const controls = [
 
 function BuildControls({
   onAddIngredient,
+  onPurchaseInit,
   onRemoveIngredient,
   disabledInfo,
   price,
   isPurchasable,
   purchaseHandler,
 }) {
+  const handleOrder = () => {
+    purchaseHandler();
+    onPurchaseInit();
+  };
+
   return (
     <div className={classes.BuildControls}>
       <p>
@@ -32,7 +38,7 @@ function BuildControls({
           label={ctrl.label}
         />
       ))}
-      <button onClick={purchaseHandler} disabled={!isPurchasable} className={classes.OrderButton}>
+      <button onClick={handleOrder} disabled={!isPurchasable} className={classes.OrderButton}>
         ORDER NOW
       </button>
     </div>
