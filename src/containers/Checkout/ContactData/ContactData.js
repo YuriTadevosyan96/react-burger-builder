@@ -12,7 +12,7 @@ import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import { purchaseBurger } from '../../../store/actions/order';
 
 // helper
-const inputConfig = (elType, elConfigType, elPlaceholder, required = true, value = '') => ({
+export const inputConfig = (elType, elConfigType, elPlaceholder, required = true, value = '') => ({
   elementType: elType,
   elementConfig: {
     type: elConfigType,
@@ -71,12 +71,13 @@ class ContactData extends Component {
     }
 
     const order = {
+      userId: this.props.userId,
       orderData: formData,
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
     };
 
-    this.props.purchaseBurger(order);
+    this.props.purchaseBurger(order, this.props.token);
   };
 
   inputChangeHandler = (e) => {
@@ -160,6 +161,8 @@ const mapStateToProps = (state) => ({
   ingredients: state.ingredients.ingredients,
   totalPrice: state.ingredients.totalPrice,
   loading: state.orders.loading,
+  token: state.auth.token,
+  userId: state.auth.userId,
 });
 
 const mapDispatchToProps = { purchaseBurger };
