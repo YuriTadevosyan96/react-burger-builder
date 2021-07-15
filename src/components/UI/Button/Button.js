@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classes from './Button.module.css';
 
-function Button({ buttonType, clicked, children, disabled }) {
+function Button({ buttonType, clicked, children, disabled, type = 'submit' }) {
   const appliedClasses = [classes.Button];
 
   if (buttonType === 'success') {
@@ -17,7 +17,7 @@ function Button({ buttonType, clicked, children, disabled }) {
   }
 
   return (
-    <button className={appliedClasses.join(' ')} onClick={clicked}>
+    <button type={type} className={appliedClasses.join(' ')} onClick={clicked}>
       {children}
     </button>
   );
@@ -25,6 +25,7 @@ function Button({ buttonType, clicked, children, disabled }) {
 
 Button.propTypes = {
   buttonType: PropTypes.oneOf(['success', 'danger']),
+  type: PropTypes.oneOf(['button', 'submit']),
   clicked: PropTypes.func,
 };
 

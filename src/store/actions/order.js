@@ -23,10 +23,10 @@ const fetchOrdersFail = (error) => ({
   payload: error,
 });
 
-export const fetchOrders = () => (dispatch) => {
+export const fetchOrders = (token, userId) => (dispatch) => {
   dispatch(fetchOrdersStart());
   apiBase
-    .get('/orders.json')
+    .get(`/orders.json?auth=${token}&orderBy="userId"&equalTo="${userId}"`)
     .then((res) => {
       const fetchedOrders = [];
       for (let key in res.data) {
@@ -57,10 +57,10 @@ const purchaseBurgerStart = () => ({
   type: PURCHASE_BURGER_START,
 });
 
-export const purchaseBurger = (orderData) => (dispatch) => {
+export const purchaseBurger = (orderData, token) => (dispatch) => {
   dispatch(purchaseBurgerStart());
   apiBase
-    .post('/orders.json', orderData)
+    .post('/orders.json?auth=' + token, orderData)
     .then((res) => {
       dispatch(purchaseBurgerSuccess(res.data.name, orderData));
     })

@@ -18,6 +18,7 @@ function BuildControls({
   price,
   isPurchasable,
   purchaseHandler,
+  isAuth,
 }) {
   const handleOrder = () => {
     purchaseHandler();
@@ -38,8 +39,9 @@ function BuildControls({
           label={ctrl.label}
         />
       ))}
+
       <button onClick={handleOrder} disabled={!isPurchasable} className={classes.OrderButton}>
-        ORDER NOW
+        {isAuth ? 'ORDER NOW' : 'SIGN IN FOR ORDER'}
       </button>
     </div>
   );
